@@ -1,0 +1,61 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  PROJECT: xxx
+  REGION: us-central1
+  FUNCTION: ciq-webhook-to-bigpanda-alert
+  FUNCTION_TARGET: CiqEventToBigPandaAlert
+  TEST: connectrix
+
+env:
+  BP_APP_KEY: yyy
+  BP_TOKEN: zzz
+
+tasks:
+  build:
+    cmds:
+      - |
+        pack build \
+             --builder gcr.io/buildpacks/builder:v1 \
+             --env GOOGLE_RUNTIME=go \
+             --env GOOGLE_FUNCTION_SIGNATURE_TYPE=http \
+             --env GOOGLE_FUNCTION_TARGET={{ .FUNCTION_TARGET }} \
+             {{ .FUNCTION }}
+
+  run-docker:
+    cmds:
+      - docker run --rm -d -e BP_TOKEN=$BP_TOKEN -e BP_APP_KEY=$BP_APP_KEY -p 8080:8080 {{ .FUNCTION }}
+
+  run-go:
+    cmds:
+      -  FUNCTION_TARGET={{ .FUNCTION_TARGET }} go run cmd/main.go
+
+  test-local-curl:
+    cmds:
+      - |
+        curl -X POST -H "Accept: application/json" \
+                    -H "x-ciq-event: ping" \
+                    --data '{"name":"flo"}' \
+                    http://localhost:8080/
+
+  test-local-ciq-event:
+    cmds:
+      - |
+        ENDPOINT=http://localhost:8080/ HEADERS_FILE=headers_{{ .TEST }}.json PAYLOAD_FILE=payload_{{ .TEST }}.json easy_curl.sh
+
+  test-gcp:
+    cmds:
+      - |
+        ENDPOINT="https://{{ .REGION }}-{{ .PROJECT }}.cloudfunctions.net/{{ .FUNCTION }}" PAYLOAD_FILE=payload_wiki_notify.json easy_curl.sh
+
+  deploy:
+    cmds:
+      - gcloud functions deploy {{ .FUNCTION }} --runtime go116 --entry-point {{ .FUNCTION_TARGET }} --trigger-http --allow-unauthenticated
+
+  all:
+    cmds:
+      - task: build
+      - task: deploy
+      - task: test-gcp

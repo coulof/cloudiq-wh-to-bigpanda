@@ -1,0 +1,7 @@
+{
+  "x-ciq-signature": "SHA-256=jcMI/qVAZjBAwgVvCJoG4RBiBtymn2004KuNyR+vHYQ=",
+  "User-Agent": "DellEMC-CloudIQ-Webhooks/2.8.2",
+  "x-ciq-event-version": "1.0",
+  "x-ciq-delivery-id": "148555",
+  "x-ciq-event": "health-issue-change"
+}

@@ -1,0 +1,27 @@
+{
+  "system_display_identifier": "BRCBRW2549G05C",
+  "system_name": "DS_6510B_171",
+  "system_model": "BRCBRW2549G05C",
+  "timestamp": 1665493546261,
+  "timestamp_iso8601": "2022-10-11T13:05Z",
+  "current_score": 70,
+  "new_issues": [
+    {
+      "id": "D452E1130E5F6122923C5F083CC180326D2F7C55F5433E60148312EAAFAE6597",
+      "impact": -30,
+      "description": "One or more components in the SAN system CONNECTRIX-BRCBRW2549G05C has a health status of down.",
+      "resolution": "Ensure the condition degrading switch health is resolved. For additional detail, use the command 'mapsdb --show' on the switch with degraded health.",
+      "rule_id": "CONNECTRIX_NETWORKSYSTEM_HEALTH_DOWN",
+      "category": "SYSTEM_HEALTH",
+      "impacted_objects": [
+        {
+          "object_native_id": "CONNECTRIX-BRCBRW2549G05C",
+          "object_name": null,
+          "object_id": "CONNECTRIX-BRCBRW2549G05C",
+          "object_native_type": "SYSTEM"
+        }
+      ]
+    }
+  ],
+  "resolved_issues": []
+}
